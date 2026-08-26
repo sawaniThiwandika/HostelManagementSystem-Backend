@@ -1,5 +1,6 @@
 package com.example.HostelManagementSystem_Backend.entity.impl;
 
+import com.example.HostelManagementSystem_Backend.entity.SuperEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Setter
 @Table(name="owner")
 @Data
-public class OwnerEntity {
+public class OwnerEntity implements SuperEntity {
     @Id
     @Column(name = "owner_id", length = 10)
     private String ownerId;

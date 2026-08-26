@@ -1,5 +1,6 @@
 package com.example.HostelManagementSystem_Backend.entity.impl;
 
+import com.example.HostelManagementSystem_Backend.entity.SuperEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @Table(name="complaint")
-public class ComplaintEntity {
+public class ComplaintEntity implements SuperEntity {
     @Id
     @Column(name = "complaint_id", length = 10)
     private String complaintId;

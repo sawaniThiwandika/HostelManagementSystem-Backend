@@ -1,12 +1,13 @@
 package com.example.HostelManagementSystem_Backend.entity.impl;
 
+import com.example.HostelManagementSystem_Backend.entity.SuperEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
 @Table(name="equipment")
-public class EquipmentEntity {
+public class EquipmentEntity implements SuperEntity {
     @Id
     @Column(name = "equipment_id", length = 10)
     private String equipmentId;

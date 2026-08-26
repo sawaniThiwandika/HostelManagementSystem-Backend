@@ -1,5 +1,6 @@
 package com.example.HostelManagementSystem_Backend.entity.impl;
 
+import com.example.HostelManagementSystem_Backend.entity.SuperEntity;
 import com.example.HostelManagementSystem_Backend.entity.impl.StudentEntity;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -8,7 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "parent")
 @Data
-public class ParentEntity {
+public class ParentEntity implements SuperEntity {
     @Id
     @Column(name = "parent_id", length = 10)
     private String parentId;
