@@ -27,6 +27,6 @@ public class ComplaintEntity implements SuperEntity {
 
     private LocalDate date;
 
-    @Column(length = 50)
+    @Column(length = 50 , nullable = true)
     private String priority;
 }
