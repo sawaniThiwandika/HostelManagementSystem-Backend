@@ -26,8 +26,8 @@ public class StaffEntity implements SuperEntity {
     @Column(name = "b_date")
     private LocalDate bDate;
 
-    @Column(name = "name_position", length = 100)
-    private String namePosition;
+    @Column(name = "job_title", length = 100)
+    private String jobTitle;
 
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL)
     private List<PaymentEntity> payments;
