@@ -22,9 +22,10 @@ public class ComplaintEntity implements SuperEntity {
     @JoinColumn(name = "room_id")
     private RoomEntity room;
 
-    @Column(length = 255)
+    @Column(length = 255,nullable = false)
     private String description;
 
+    @Column(nullable = false)
     private LocalDate date;
 
     @Column(length = 50 , nullable = true)
