@@ -30,11 +30,11 @@ public class OwnerEntity implements SuperEntity {
     @Column(length = 255)
     private String address;
 
-    @Column(length = 50)
-    private String postron;
+    @Column(length = 100)
+    private String workplace;
 
     @Column(length = 100)
-    private String job;
+    private String jonTitle;
 
     @Column(length = 100)
     private String email;
