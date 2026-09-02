@@ -21,13 +21,13 @@ public class StudentEntity implements SuperEntity {
     @Column(unique = true, length = 12)
     private String nic;
 
-    @Column(length = 100)
+    @Column(length = 100, unique = true, nullable = false)
     private String email;
 
-    @Column(length = 15)
+    @Column(length = 15 , nullable = false)
     private String tel;
 
-    @Column(length = 255)
+    @Column(length = 255, nullable = false)
     private String address;
 
     // 1. Added the parent field here
@@ -36,16 +36,16 @@ public class StudentEntity implements SuperEntity {
     private ParentEntity parent;
 
     // 2. dob is completely separate with only @Column
-    @Column(name = "dob")
+    @Column(name = "dob"  , nullable = false)
     private LocalDate dob;
 
     @Column(name = "special_things", length = 255)
     private String specialThings;
 
-    @Column(name = "job_education_institute", length = 150)
+    @Column(name = "job_education_institute", length = 150, nullable = false)
     private String jobEducationInstitute;
 
-    @Column(name = "position_faculty", length = 100)
+    @Column(name = "position_faculty", length = 100, nullable = false)
     private String positionFaculty;
 
     @Column(length = 50)
