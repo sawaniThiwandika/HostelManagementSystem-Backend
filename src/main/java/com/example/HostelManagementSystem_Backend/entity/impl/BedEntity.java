@@ -18,6 +18,7 @@ public class BedEntity implements SuperEntity {
     @Column(length = 255)
     private String description;
 
+    @Column()
     private Boolean availability;
 
     @ManyToOne
