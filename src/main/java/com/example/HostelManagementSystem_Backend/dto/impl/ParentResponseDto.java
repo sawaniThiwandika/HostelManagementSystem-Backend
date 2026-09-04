@@ -1,7 +1,6 @@
 package com.example.HostelManagementSystem_Backend.dto.impl;
 
 import com.example.HostelManagementSystem_Backend.dto.SuperDto;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
