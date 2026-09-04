@@ -1,14 +1,8 @@
 package com.example.HostelManagementSystem_Backend.dto.impl;
 
 import com.example.HostelManagementSystem_Backend.dto.SuperDto;
-import com.example.HostelManagementSystem_Backend.entity.impl.StudentEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
