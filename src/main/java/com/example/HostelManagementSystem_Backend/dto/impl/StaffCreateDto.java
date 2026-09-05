@@ -28,6 +28,8 @@ public class StaffCreateDto implements SuperDto {
 
     @NotBlank(message = "Address is required")
     private String address;
+    @NotBlank(message = "Name is required")
+    private String name;
 
     @NotNull(message = "Birth date is required")
     @Past(message = "Birth date must be in the past")
