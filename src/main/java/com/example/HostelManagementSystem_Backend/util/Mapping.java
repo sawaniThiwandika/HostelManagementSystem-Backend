@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -337,6 +338,43 @@ public class Mapping {
     public List<EquipmentResponseDto> toEquipmentResponseDtoList(List<EquipmentEntity> equipmentEntities) {
         return equipmentEntities.stream()
                 .map(this::toEquipmentResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public PaymentEntity toPaymentEntity(PaymentCreateDto dto) {
+        PaymentEntity paymentEntity = modelMapper.map(dto, PaymentEntity.class);
+
+        paymentEntity.setDate(LocalDate.now());
+        paymentEntity.setTime(LocalTime.now());
+
+        if (dto.getStudentId() != null && !dto.getStudentId().isBlank()) {
+            StudentEntity studentEntity = studentRepository.findById(dto.getStudentId())
+                    .orElseThrow(() -> new RuntimeException("Student not found with ID: " + dto.getStudentId()));
+            paymentEntity.setStudent(studentEntity);
+        }
+
+        return paymentEntity;
+    }
+
+    public PaymentResponseDto toPaymentResponseDto(PaymentEntity entity) {
+        PaymentResponseDto dto = modelMapper.map(entity, PaymentResponseDto.class);
+
+        if (entity.getStudent() != null) {
+            dto.setStudentId(entity.getStudent().getStudentId());
+            dto.setStudentName(entity.getStudent().getName());
+        }
+
+        if (entity.getStaff() != null) {
+            dto.setStaffId(entity.getStaff().getStaffId());
+            dto.setStaffName(entity.getStaff().getStaffName());
+        }
+
+        return dto;
+    }
+
+    public List<PaymentResponseDto> toPaymentResponseDtoList(List<PaymentEntity> paymentEntities) {
+        return paymentEntities.stream()
+                .map(this::toPaymentResponseDto)
                 .collect(Collectors.toList());
     }
 }
