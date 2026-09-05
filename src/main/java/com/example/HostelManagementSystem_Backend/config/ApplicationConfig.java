@@ -62,12 +62,24 @@ public class ApplicationConfig {
             }
         };
 
+        // PaymentEntity > PaymentResponseDto Map
+        PropertyMap<PaymentEntity, PaymentResponseDto> paymentToDtoMap = new PropertyMap<>() {
+            @Override
+            protected void configure() {
+                map().setStudentId(source.getStudent().getStudentId());
+                map().setStudentName(source.getStudent().getName());
+                map().setStaffId(source.getStaff().getStaffId());
+                map().setStaffName(source.getStaff().getStaffName());
+            }
+        };
+
         // Register custom property maps
         modelMapper.addMappings(roomToDtoMap);
         modelMapper.addMappings(bedToDtoMap);
         modelMapper.addMappings(staffToDtoMap);
         modelMapper.addMappings(studentToDtoMap);
         modelMapper.addMappings(equipmentToDtoMap);
+        modelMapper.addMappings(paymentToDtoMap);
 
         return modelMapper;
     }
