@@ -55,7 +55,7 @@ public class Mapping {
     public BedResponseDto toBedResponseDto(BedEntity entity) {
         BedResponseDto dto = modelMapper.map(entity, BedResponseDto.class);
 
-        // Derived dynamically: true if no student assigned, false if occupied
+        // Derived dynamically, true if no student assigned, false if occupied
         dto.setAvailability(entity.getStudent() == null);
 
         if (entity.getStudent() != null) {
@@ -202,7 +202,6 @@ public class Mapping {
             studentEntity.setParent(parent);
         }
 
-        // Map mandatory Bed
         if (dto.getBedId() != null) {
             BedEntity bed = bedRepository.findById(dto.getBedId())
                     .orElseThrow(() -> new RuntimeException("Bed not found with ID: " + dto.getBedId()));
@@ -279,7 +278,7 @@ public class Mapping {
         complaintEntity.setStudent(student);
         complaintEntity.setPriority(null); // Warden will assign priority later
 
-        // Student mandatory bed -> room resolution
+
         if (student.getBed() != null && student.getBed().getRoom() != null) {
             complaintEntity.setRoom(student.getBed().getRoom());
         } else {
@@ -309,6 +308,35 @@ public class Mapping {
     public List<ComplaintResponseDto> toComplaintResponseDtoList(List<ComplaintEntity> complaintEntities) {
         return complaintEntities.stream()
                 .map(this::toComplaintResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    //Equipment Mapping
+    public EquipmentEntity toEquipmentEntity(EquipmentCreateDto dto) {
+        EquipmentEntity equipmentEntity = modelMapper.map(dto, EquipmentEntity.class);
+
+        if (dto.getRoomId() != null && !dto.getRoomId().isBlank()) {
+            RoomEntity roomEntity = roomRepository.findById(dto.getRoomId())
+                    .orElseThrow(() -> new RuntimeException("Room not found with ID: " + dto.getRoomId()));
+            equipmentEntity.setRoom(roomEntity);
+        }
+
+        return equipmentEntity;
+    }
+
+    public EquipmentResponseDto toEquipmentResponseDto(EquipmentEntity entity) {
+        EquipmentResponseDto dto = modelMapper.map(entity, EquipmentResponseDto.class);
+
+        if (entity.getRoom() != null) {
+            dto.setRoomId(entity.getRoom().getRoomId());
+        }
+
+        return dto;
+    }
+
+    public List<EquipmentResponseDto> toEquipmentResponseDtoList(List<EquipmentEntity> equipmentEntities) {
+        return equipmentEntities.stream()
+                .map(this::toEquipmentResponseDto)
                 .collect(Collectors.toList());
     }
 }
