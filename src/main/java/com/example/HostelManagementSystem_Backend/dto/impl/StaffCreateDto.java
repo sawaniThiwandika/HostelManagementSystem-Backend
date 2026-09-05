@@ -1,5 +1,6 @@
 package com.example.HostelManagementSystem_Backend.dto.impl;
 import com.example.HostelManagementSystem_Backend.dto.SuperDto;
+import com.example.HostelManagementSystem_Backend.enums.StaffCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -32,6 +33,10 @@ public class StaffCreateDto implements SuperDto {
     @Past(message = "Birth date must be in the past")
     private LocalDate bDate;
 
-    @NotBlank(message = "Job title is required")
-    private String jobTitle;
+    @NotNull(message = "Staff category is required")
+    private StaffCategory category;
+
+    @NotBlank(message = "Hostel ID is required")
+    private String hostelId;
+
 }
