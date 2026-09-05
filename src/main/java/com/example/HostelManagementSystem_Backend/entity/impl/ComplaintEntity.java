@@ -1,6 +1,7 @@
 package com.example.HostelManagementSystem_Backend.entity.impl;
 
 import com.example.HostelManagementSystem_Backend.entity.SuperEntity;
+import com.example.HostelManagementSystem_Backend.enums.Priority;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -28,6 +29,7 @@ public class ComplaintEntity implements SuperEntity {
     @Column(nullable = false)
     private LocalDate date;
 
-    @Column(length = 50 , nullable = true)
-    private String priority;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = true)
+    private Priority priority;
 }
