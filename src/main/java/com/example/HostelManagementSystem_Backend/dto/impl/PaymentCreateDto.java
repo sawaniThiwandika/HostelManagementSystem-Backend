@@ -14,9 +14,6 @@ public class PaymentCreateDto implements SuperDto {
     @NotBlank(message = "Student ID is required")
     private String studentId;
 
-    @NotBlank(message = "Staff ID is required")
-    private String staffId;
-
     @NotNull(message = "Fee amount is required")
     private Double fee;
 
