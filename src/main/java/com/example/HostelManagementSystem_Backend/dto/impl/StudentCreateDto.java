@@ -53,6 +53,10 @@ public class StudentCreateDto implements SuperDto {
     private LocalDate dob;
 
     private String specialThings;
+
+    @NotBlank(message = "Bed ID is required")
+    private String bedId;
+
     private String jobEducationInstitute;
     private String positionFaculty;
     private String batch;
