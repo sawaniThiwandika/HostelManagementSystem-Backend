@@ -1,6 +1,7 @@
 package com.example.HostelManagementSystem_Backend.entity.impl;
 
 import com.example.HostelManagementSystem_Backend.entity.SuperEntity;
+import com.example.HostelManagementSystem_Backend.enums.StaffCategory;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
@@ -26,9 +27,14 @@ public class StaffEntity implements SuperEntity {
     @Column(name = "b_date")
     private LocalDate bDate;
 
-    @Column(name = "job_title", length = 100)
-    private String jobTitle;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "job_title", length = 50, nullable = false)
+    private StaffCategory category;
 
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL)
     private List<PaymentEntity> payments;
+
+    @ManyToOne
+    @JoinColumn(name = "hostel_id")
+    private HostelEntity hostel;
 }
