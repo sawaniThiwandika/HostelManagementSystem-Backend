@@ -27,4 +27,6 @@ public class StudentResponseDto implements SuperDto {
     private String degree;
     private String parentId;
     private String parentName;
+    private String bedId;
+    private String roomId;
 }
