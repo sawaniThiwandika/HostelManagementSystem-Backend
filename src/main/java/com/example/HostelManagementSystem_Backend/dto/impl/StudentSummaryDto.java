@@ -16,4 +16,5 @@ public class StudentSummaryDto implements SuperDto {
     private String tel;
     private String jobEducationInstitute;
     private String positionFaculty;
+    private String roomId;
 }
