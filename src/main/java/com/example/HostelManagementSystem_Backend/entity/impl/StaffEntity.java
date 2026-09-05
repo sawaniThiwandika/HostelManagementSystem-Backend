@@ -15,6 +15,9 @@ public class StaffEntity implements SuperEntity {
     @Column(name = "staff_id", length = 10)
     private String staffId;
 
+    @Column(length = 255)
+    private String staffName;
+
     @Column(unique = true, length = 12)
     private String nic;
 
