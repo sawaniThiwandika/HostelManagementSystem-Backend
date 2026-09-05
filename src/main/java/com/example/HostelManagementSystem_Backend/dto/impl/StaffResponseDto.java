@@ -15,6 +15,7 @@ public class StaffResponseDto implements SuperDto {
 
     private String staffId;
     private String nic;
+    private String name;
     private String tel;
     private String address;
     private LocalDate bDate;
