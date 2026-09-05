@@ -14,6 +14,7 @@ public class ComplaintResponseDto {
 
     private String complaintId;
     private String studentName;
+    private String studentId;
     private String roomId;
     private String description;
     private LocalDate date;
