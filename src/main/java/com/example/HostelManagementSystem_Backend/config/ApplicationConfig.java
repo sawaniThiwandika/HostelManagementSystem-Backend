@@ -15,7 +15,7 @@ public class ApplicationConfig {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
 
-        // RoomEntity to RoomResponseDto
+        // RoomEntity > RoomResponseDto
         PropertyMap<RoomEntity, RoomResponseDto> roomToDtoMap = new PropertyMap<>() {
             @Override
             protected void configure() {
@@ -24,7 +24,7 @@ public class ApplicationConfig {
             }
         };
 
-        // StudentEntity -> StudentResponseDto
+        // StudentEntity > StudentResponseDto
         PropertyMap<StudentEntity, StudentResponseDto> studentToDtoMap = new PropertyMap<>() {
             @Override
             protected void configure() {
@@ -35,7 +35,7 @@ public class ApplicationConfig {
             }
         };
 
-        // BedEntity -> BedResponseDto
+        // BedEntity > BedResponseDto
         PropertyMap<BedEntity, BedResponseDto> bedToDtoMap = new PropertyMap<>() {
             @Override
             protected void configure() {
@@ -45,7 +45,7 @@ public class ApplicationConfig {
                 map().setStudentName(source.getStudent().getName());
             }
         };
-
+        // StaffEntity > StaffResponseDto
         PropertyMap<StaffEntity, StaffResponseDto> staffToDtoMap = new PropertyMap<>() {
             @Override
             protected void configure() {
@@ -54,11 +54,20 @@ public class ApplicationConfig {
             }
         };
 
+        // EquipmentEntity > EquipmentResponseDto
+        PropertyMap<EquipmentEntity, EquipmentResponseDto> equipmentToDtoMap = new PropertyMap<>() {
+            @Override
+            protected void configure() {
+                map().setRoomId(source.getRoom().getRoomId());
+            }
+        };
+
         // Register custom property maps
         modelMapper.addMappings(roomToDtoMap);
         modelMapper.addMappings(bedToDtoMap);
         modelMapper.addMappings(staffToDtoMap);
         modelMapper.addMappings(studentToDtoMap);
+        modelMapper.addMappings(equipmentToDtoMap);
 
         return modelMapper;
     }
