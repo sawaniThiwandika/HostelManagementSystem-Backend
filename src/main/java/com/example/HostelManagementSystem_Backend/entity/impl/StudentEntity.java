@@ -54,6 +54,10 @@ public class StudentEntity implements SuperEntity {
     @Column(length = 100)
     private String degree;
 
+    @OneToOne(optional = false)
+    @JoinColumn(name = "bed_id", referencedColumnName = "bed_id", unique = true, nullable = false)
+    private BedEntity bed;
+
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<PaymentEntity> payments;
 
