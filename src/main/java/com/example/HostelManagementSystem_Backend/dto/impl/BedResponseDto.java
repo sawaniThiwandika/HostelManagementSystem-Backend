@@ -16,4 +16,6 @@ public class BedResponseDto implements SuperDto {
     private Boolean availability;
     private String roomId;
     private int roomNo;
+    private String studentId;
+    private String studentName;
 }
