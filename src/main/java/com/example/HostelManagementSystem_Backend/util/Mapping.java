@@ -1,11 +1,13 @@
 package com.example.HostelManagementSystem_Backend.util;
 
+
 import com.example.HostelManagementSystem_Backend.dto.impl.*;
 import com.example.HostelManagementSystem_Backend.entity.impl.*;
 import com.example.HostelManagementSystem_Backend.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,28 +20,28 @@ public class Mapping {
     private final OwnerRepository ownerRepository;
     private final ParentRepository parentRepository;
     private final StudentRepository studentRepository;
+    private final BedRepository bedRepository;
 
     public Mapping(ModelMapper modelMapper,
                    RoomRepository roomRepository,
                    HostelRepository hostelRepository,
                    OwnerRepository ownerRepository,
                    ParentRepository parentRepository,
-                   StudentRepository studentRepository) {
+                   StudentRepository studentRepository,
+                   BedRepository bedRepository) {
         this.modelMapper = modelMapper;
         this.roomRepository = roomRepository;
         this.hostelRepository = hostelRepository;
         this.ownerRepository = ownerRepository;
         this.parentRepository = parentRepository;
         this.studentRepository = studentRepository;
-
+        this.bedRepository = bedRepository;
     }
 
     // Bed Mappings
 
-
     public BedEntity toBedEntity(BedCreateRequestDto dto) {
         BedEntity bedEntity = modelMapper.map(dto, BedEntity.class);
-        bedEntity.setAvailability(true);
 
         if (dto.getRoomId() != 0) {
             RoomEntity roomEntity = roomRepository.findById(String.valueOf(dto.getRoomId()))
@@ -51,7 +53,17 @@ public class Mapping {
     }
 
     public BedResponseDto toBedResponseDto(BedEntity entity) {
-        return modelMapper.map(entity, BedResponseDto.class);
+        BedResponseDto dto = modelMapper.map(entity, BedResponseDto.class);
+
+        // Derived dynamically: true if no student assigned, false if occupied
+        dto.setAvailability(entity.getStudent() == null);
+
+        if (entity.getStudent() != null) {
+            dto.setStudentId(entity.getStudent().getStudentId());
+            dto.setStudentName(entity.getStudent().getName());
+        }
+
+        return dto;
     }
 
     public List<BedResponseDto> toBedResponseDtoList(List<BedEntity> bedEntities) {
@@ -88,12 +100,11 @@ public class Mapping {
                 .collect(Collectors.toList());
     }
 
-
     // Hostel Mappings
+
     public HostelEntity toHostelEntity(HostelCreateDto dto) {
         HostelEntity hostelEntity = modelMapper.map(dto, HostelEntity.class);
 
-        // Concatenate address fields
         String fullAddress = AddressUtils.formatAddress(
                 dto.getStreetAddress(),
                 dto.getCity(),
@@ -102,7 +113,6 @@ public class Mapping {
         );
         hostelEntity.setAddress(fullAddress);
 
-        // Link OwnerEntity
         if (dto.getOwnerId() != null) {
             OwnerEntity owner = ownerRepository.findById(dto.getOwnerId())
                     .orElseThrow(() -> new RuntimeException("Owner not found with ID: " + dto.getOwnerId()));
@@ -126,7 +136,6 @@ public class Mapping {
                 .collect(Collectors.toList());
     }
 
-
     // Owner Mappings
 
     public OwnerEntity toOwnerEntity(OwnerResponseDto dto) {
@@ -147,9 +156,7 @@ public class Mapping {
                 .collect(Collectors.toList());
     }
 
-
     // Parent Mappings
-
 
     public ParentEntity toParentEntity(ParentCreateDto dto) {
         ParentEntity parentEntity = modelMapper.map(dto, ParentEntity.class);
@@ -169,16 +176,13 @@ public class Mapping {
         return modelMapper.map(entity, ParentResponseDto.class);
     }
 
-
     public List<ParentResponseDto> toParentResponseDtoList(List<ParentEntity> parentEntities) {
         return parentEntities.stream()
                 .map(this::toParentResponseDto)
                 .collect(Collectors.toList());
     }
 
-
     // Student Mappings
-
 
     public StudentEntity toStudentEntity(StudentCreateDto dto) {
         StudentEntity studentEntity = modelMapper.map(dto, StudentEntity.class);
@@ -191,18 +195,45 @@ public class Mapping {
         );
         studentEntity.setAddress(fullAddress);
 
-        // map parent
+        // Map parent
         if (dto.getParentId() != null) {
             ParentEntity parent = parentRepository.findById(dto.getParentId())
                     .orElseThrow(() -> new RuntimeException("Parent not found with ID: " + dto.getParentId()));
             studentEntity.setParent(parent);
         }
 
+        // Map mandatory Bed
+        if (dto.getBedId() != null) {
+            BedEntity bed = bedRepository.findById(dto.getBedId())
+                    .orElseThrow(() -> new RuntimeException("Bed not found with ID: " + dto.getBedId()));
+
+            if (bed.getStudent() != null) {
+                throw new IllegalStateException("Bed (" + dto.getBedId() + ") is already assigned to another student.");
+            }
+            studentEntity.setBed(bed);
+        } else {
+            throw new IllegalArgumentException("Bed ID is mandatory for student registration.");
+        }
+
         return studentEntity;
     }
 
     public StudentResponseDto toStudentResponseDto(StudentEntity entity) {
-        return modelMapper.map(entity, StudentResponseDto.class);
+        StudentResponseDto dto = modelMapper.map(entity, StudentResponseDto.class);
+
+        if (entity.getParent() != null) {
+            dto.setParentId(entity.getParent().getParentId());
+            dto.setParentName(entity.getParent().getParentName());
+        }
+
+        if (entity.getBed() != null) {
+            dto.setBedId(entity.getBed().getBedId());
+            if (entity.getBed().getRoom() != null) {
+                dto.setRoomId(entity.getBed().getRoom().getRoomId());
+            }
+        }
+
+        return dto;
     }
 
     public StudentSummaryDto toStudentSummaryDto(StudentEntity entity) {
@@ -212,6 +243,72 @@ public class Mapping {
     public List<StudentResponseDto> toStudentResponseDtoList(List<StudentEntity> studentEntities) {
         return studentEntities.stream()
                 .map(this::toStudentResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    // Staff Mapping
+
+    public StaffEntity toStaffEntity(StaffCreateDto dto) {
+        StaffEntity staffEntity = modelMapper.map(dto, StaffEntity.class);
+
+        if (dto.getHostelId() != null) {
+            HostelEntity hostel = hostelRepository.findById(dto.getHostelId())
+                    .orElseThrow(() -> new RuntimeException("Hostel not found with ID: " + dto.getHostelId()));
+            staffEntity.setHostel(hostel);
+        }
+
+        return staffEntity;
+    }
+
+    public StaffResponseDto toStaffResponseDto(StaffEntity entity) {
+        return modelMapper.map(entity, StaffResponseDto.class);
+    }
+
+    public List<StaffResponseDto> toStaffResponseDtoList(List<StaffEntity> staffEntities) {
+        return staffEntities.stream()
+                .map(this::toStaffResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    // Complaint Mapping
+
+    public ComplaintEntity toComplaintEntity(ComplaintCreateDto dto, StudentEntity student) {
+        ComplaintEntity complaintEntity = modelMapper.map(dto, ComplaintEntity.class);
+
+        complaintEntity.setDate(LocalDate.now());
+        complaintEntity.setStudent(student);
+        complaintEntity.setPriority(null); // Warden will assign priority later
+
+        // Student mandatory bed -> room resolution
+        if (student.getBed() != null && student.getBed().getRoom() != null) {
+            complaintEntity.setRoom(student.getBed().getRoom());
+        } else {
+            throw new IllegalStateException(
+                    "Student (" + student.getStudentId() + ") does not have a valid room linked to their assigned bed."
+            );
+        }
+
+        return complaintEntity;
+    }
+
+    public ComplaintResponseDto toComplaintResponseDto(ComplaintEntity entity) {
+        ComplaintResponseDto dto = modelMapper.map(entity, ComplaintResponseDto.class);
+
+        if (entity.getStudent() != null) {
+            dto.setStudentId(entity.getStudent().getStudentId());
+            dto.setStudentName(entity.getStudent().getName());
+        }
+
+        if (entity.getRoom() != null) {
+            dto.setRoomId(entity.getRoom().getRoomId());
+        }
+
+        return dto;
+    }
+
+    public List<ComplaintResponseDto> toComplaintResponseDtoList(List<ComplaintEntity> complaintEntities) {
+        return complaintEntities.stream()
+                .map(this::toComplaintResponseDto)
                 .collect(Collectors.toList());
     }
 }
