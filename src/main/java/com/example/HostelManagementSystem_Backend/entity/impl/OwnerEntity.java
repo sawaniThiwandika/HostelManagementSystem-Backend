@@ -34,11 +34,15 @@ public class OwnerEntity implements SuperEntity {
     private String workplace;
 
     @Column(length = 100)
-    private String jonTitle;
+    private String jobTitle;
 
     @Column(length = 100)
     private String email;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<HostelEntity> hostels;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private UserEntity user;
 }
