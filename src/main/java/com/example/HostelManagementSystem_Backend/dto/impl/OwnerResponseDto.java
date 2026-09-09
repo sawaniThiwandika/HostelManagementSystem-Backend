@@ -24,7 +24,7 @@ public class OwnerResponseDto implements SuperDto {
 
     private String workplace;
 
-    private String jonTitle;
+    private String jobTitle;
 
     private String email;
 
