@@ -103,7 +103,7 @@ public class Mapping {
 
     // Hostel Mappings
 
-    public HostelEntity toHostelEntity(HostelCreateDto dto) {
+    /*public HostelEntity toHostelEntity(HostelCreateDto dto) {
         HostelEntity hostelEntity = modelMapper.map(dto, HostelEntity.class);
 
         String fullAddress = AddressUtils.formatAddress(
@@ -121,11 +121,34 @@ public class Mapping {
         }
 
         return hostelEntity;
+    }*/
+
+    // Inside Mapping.java, uncomment and update toHostelEntity to accept HostelCreateDto
+    public HostelEntity toHostelEntity(HostelCreateDto dto) {
+        HostelEntity hostelEntity = modelMapper.map(dto, HostelEntity.class);
+
+        String fullAddress = AddressUtils.formatAddress(
+                dto.getStreetAddress(),
+                dto.getCity(),
+                dto.getProvince(),
+                dto.getPostelCode()
+        );
+        hostelEntity.setAddress(fullAddress);
+
+        return hostelEntity;
     }
 
     public HostelResponseDto toHostelResponseDto(HostelEntity entity) {
-        return modelMapper.map(entity, HostelResponseDto.class);
+        HostelResponseDto dto = modelMapper.map(entity, HostelResponseDto.class);
+
+        if (entity.getOwner() != null) {
+            OwnerSummeryDto ownerSummaryDto = modelMapper.map(entity.getOwner(), OwnerSummeryDto.class);
+            dto.setOwnerSummery(ownerSummaryDto);
+        }
+
+        return dto;
     }
+
 
     public HostelSummaryDto toHostelSummaryDto(HostelEntity entity) {
         return modelMapper.map(entity, HostelSummaryDto.class);

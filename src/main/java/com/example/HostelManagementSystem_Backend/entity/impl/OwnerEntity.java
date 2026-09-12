@@ -1,6 +1,7 @@
 package com.example.HostelManagementSystem_Backend.entity.impl;
 
 import com.example.HostelManagementSystem_Backend.entity.SuperEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,6 +41,7 @@ public class OwnerEntity implements SuperEntity {
     private String email;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonManagedReference("owner-hostels")
     private List<HostelEntity> hostels;
 
     @OneToOne(cascade = CascadeType.ALL)

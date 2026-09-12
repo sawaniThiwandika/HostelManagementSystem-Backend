@@ -3,7 +3,9 @@ package com.example.HostelManagementSystem_Backend.repository;
 import com.example.HostelManagementSystem_Backend.entity.impl.OwnerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 
 @Repository
@@ -21,4 +23,6 @@ public interface OwnerRepository extends JpaRepository<OwnerEntity, String> {
     @Query(value = "SELECT owner_id FROM owner ORDER BY owner_id DESC LIMIT 1", nativeQuery = true)
     Optional<String> findLastOwnerId();
 
+    @Query("SELECT o FROM OwnerEntity o WHERE o.user.username = :username")
+    Optional<OwnerEntity> findByUsername(@Param("username") String username);
 }

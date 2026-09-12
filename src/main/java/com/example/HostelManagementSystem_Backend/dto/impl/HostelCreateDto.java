@@ -25,7 +25,5 @@ public class HostelCreateDto {
     private String email;
     @NotBlank(message = "hostel location is required")
     private String location;
-    @NotBlank(message = "hostel owner id required")
-    private String ownerId;
 
 }
