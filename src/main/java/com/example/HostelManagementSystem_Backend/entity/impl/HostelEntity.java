@@ -1,6 +1,8 @@
 package com.example.HostelManagementSystem_Backend.entity.impl;
 
 import com.example.HostelManagementSystem_Backend.entity.SuperEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -31,8 +33,10 @@ public class HostelEntity implements SuperEntity {
 
     @ManyToOne
     @JoinColumn(name = "owner_id",nullable = false)
+    @JsonBackReference("owner-hostels")
     private OwnerEntity owner;
 
     @OneToMany(mappedBy = "hostel", cascade = CascadeType.ALL)
+    @JsonManagedReference("hostel-rooms")
     private List<RoomEntity> rooms;
 }
