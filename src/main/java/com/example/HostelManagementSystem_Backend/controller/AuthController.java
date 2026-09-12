@@ -1,8 +1,6 @@
 package com.example.HostelManagementSystem_Backend.controller;
 
-import com.example.HostelManagementSystem_Backend.dto.impl.AuthResponseDto;
-import com.example.HostelManagementSystem_Backend.dto.impl.OwnerCreateDto;
-import com.example.HostelManagementSystem_Backend.dto.impl.UserSignUpDto;
+import com.example.HostelManagementSystem_Backend.dto.impl.*;
 import com.example.HostelManagementSystem_Backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,5 +23,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody UserSignUpDto userSignUpDto) {
         return ResponseEntity.ok(authService.login(userSignUpDto));
+    }
+
+
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenRefreshResponseDto> refreshToken(@RequestBody TokenRefreshRequestDto request) {
+        return ResponseEntity.ok(authService.refreshToken(request));
     }
 }

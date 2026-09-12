@@ -1,12 +1,12 @@
 package com.example.HostelManagementSystem_Backend.service.impl;
 
-import com.example.HostelManagementSystem_Backend.dto.impl.AuthResponseDto;
-import com.example.HostelManagementSystem_Backend.dto.impl.OwnerCreateDto;
-import com.example.HostelManagementSystem_Backend.dto.impl.UserSignUpDto;
+import com.example.HostelManagementSystem_Backend.dto.impl.*;
 import com.example.HostelManagementSystem_Backend.entity.impl.OwnerEntity;
+import com.example.HostelManagementSystem_Backend.entity.impl.RefreshTokenEntity;
 import com.example.HostelManagementSystem_Backend.entity.impl.UserEntity;
 import com.example.HostelManagementSystem_Backend.enums.Role;
 import com.example.HostelManagementSystem_Backend.repository.OwnerRepository;
+import com.example.HostelManagementSystem_Backend.repository.RefreshTokenRepository;
 import com.example.HostelManagementSystem_Backend.repository.UserRepository;
 import com.example.HostelManagementSystem_Backend.security.JwtUtil;
 import com.example.HostelManagementSystem_Backend.service.AuthService;
@@ -14,6 +14,8 @@ import com.example.HostelManagementSystem_Backend.util.IdGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,16 +25,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final OwnerRepository ownerRepository;
     private final PasswordEncoder passwordEncoder;
     private final IdGenerator idGenerator;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
 
     @Override
     @Transactional
     public AuthResponseDto registerOwner(OwnerCreateDto ownerCreateDto) {
-
         if (userRepository.existsByUsername(ownerCreateDto.getUser().getUsername())) {
             throw new RuntimeException("Username is already taken!");
         }
@@ -63,10 +66,15 @@ public class AuthServiceImpl implements AuthService {
 
         OwnerEntity savedOwner = ownerRepository.save(owner);
 
-        String token = jwtUtil.generateToken(savedUser.getUsername(), savedUser.getRole().name());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getUsername());
+        String accessToken = jwtUtil.generateToken(savedUser.getUsername(), savedUser.getRole().name());
+        String refreshTokenStr = jwtUtil.generateRefreshToken(userDetails);
+
+        saveOrUpdateRefreshToken(savedUser, refreshTokenStr);
 
         return AuthResponseDto.builder()
-                .token(token)
+                .token(accessToken)
+                .refreshToken(refreshTokenStr)
                 .id(savedOwner.getOwnerId())
                 .username(savedUser.getUsername())
                 .email(savedOwner.getEmail())
@@ -76,6 +84,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public AuthResponseDto login(UserSignUpDto userSignUpDto) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -87,13 +96,46 @@ public class AuthServiceImpl implements AuthService {
         UserEntity user = userRepository.findByUsername(userSignUpDto.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + userSignUpDto.getUsername()));
 
-        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        String accessToken = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
+        String refreshTokenStr = jwtUtil.generateRefreshToken(userDetails);
+
+        saveOrUpdateRefreshToken(user, refreshTokenStr);
 
         return AuthResponseDto.builder()
-                .token(token)
+                .token(accessToken)
+                .refreshToken(refreshTokenStr)
                 .username(user.getUsername())
                 .role(user.getRole().name())
                 .message("Login successful!")
                 .build();
+    }
+
+    @Override
+    public TokenRefreshResponseDto refreshToken(TokenRefreshRequestDto request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        if (jwtUtil.validateToken(requestRefreshToken)) {
+            String username = jwtUtil.extractUsername(requestRefreshToken);
+
+            UserEntity user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            refreshTokenRepository.findByToken(requestRefreshToken)
+                    .orElseThrow(() -> new RuntimeException("Refresh token not found in database"));
+
+            String newAccessToken = jwtUtil.generateToken(username, user.getRole().name());
+            return new TokenRefreshResponseDto(newAccessToken, requestRefreshToken);
+        }
+
+        throw new RuntimeException("Refresh token is expired or invalid");
+    }
+
+    private void saveOrUpdateRefreshToken(UserEntity user, String tokenStr) {
+        RefreshTokenEntity refreshToken = refreshTokenRepository.findByUser(user)
+                .orElse(new RefreshTokenEntity());
+        refreshToken.setUser(user);
+        refreshToken.setToken(tokenStr);
+        refreshTokenRepository.save(refreshToken);
     }
 }

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class AuthResponseDto implements SuperDto {
 
     private String token;
+    private String refreshToken;
     private String id;
     private String username;
     private String email;
