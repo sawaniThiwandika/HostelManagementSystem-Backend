@@ -1,6 +1,7 @@
 package com.example.HostelManagementSystem_Backend.controller;
 
 import com.example.HostelManagementSystem_Backend.dto.impl.HostelCreateDto;
+import com.example.HostelManagementSystem_Backend.dto.impl.HostelResponseDto;
 import com.example.HostelManagementSystem_Backend.entity.impl.HostelEntity;
 import com.example.HostelManagementSystem_Backend.service.impl.HostelServiceImpl;
 import jakarta.validation.Valid;
@@ -22,11 +23,11 @@ public class HostelController {
 
     @PostMapping
     @PreAuthorize("hasRole('OWNER')")
-    public ResponseEntity<HostelEntity> createHostel(
+    public ResponseEntity<HostelResponseDto> createHostel(
             @Valid @RequestBody HostelCreateDto hostelCreateDto,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        HostelEntity savedHostel = hostelService.createHostel(hostelCreateDto, userDetails.getUsername());
+        HostelResponseDto savedHostel = hostelService.createHostel(hostelCreateDto, userDetails.getUsername());
         return new ResponseEntity<>(savedHostel, HttpStatus.CREATED);
     }
 }

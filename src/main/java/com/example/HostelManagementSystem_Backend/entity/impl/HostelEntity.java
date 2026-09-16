@@ -33,7 +33,6 @@ public class HostelEntity implements SuperEntity {
 
     @ManyToOne
     @JoinColumn(name = "owner_id",nullable = false)
-    @JsonBackReference("owner-hostels")
     private OwnerEntity owner;
 
     @OneToMany(mappedBy = "hostel", cascade = CascadeType.ALL)
