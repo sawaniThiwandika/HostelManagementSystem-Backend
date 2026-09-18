@@ -1,6 +1,7 @@
 package com.example.HostelManagementSystem_Backend.controller;
 
 import com.example.HostelManagementSystem_Backend.dto.impl.HostelCreateDto;
+import com.example.HostelManagementSystem_Backend.dto.impl.HostelSummaryDto;
 import com.example.HostelManagementSystem_Backend.entity.impl.HostelEntity;
 import com.example.HostelManagementSystem_Backend.service.impl.HostelServiceImpl;
 import jakarta.validation.Valid;
@@ -11,6 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/hostels")
@@ -28,5 +31,11 @@ public class HostelController {
 
         HostelEntity savedHostel = hostelService.createHostel(hostelCreateDto, userDetails.getUsername());
         return new ResponseEntity<>(savedHostel, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<HostelSummaryDto>> getAllHostels() {
+        List<HostelSummaryDto> hostels = hostelService.getAllHostels();
+        return ResponseEntity.ok(hostels);
     }
 }
