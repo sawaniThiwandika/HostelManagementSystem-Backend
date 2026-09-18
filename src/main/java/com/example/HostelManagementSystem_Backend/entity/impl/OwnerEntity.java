@@ -41,7 +41,6 @@ public class OwnerEntity implements SuperEntity {
     private String email;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    @JsonManagedReference("owner-hostels")
     private List<HostelEntity> hostels;
 
     @OneToOne(cascade = CascadeType.ALL)

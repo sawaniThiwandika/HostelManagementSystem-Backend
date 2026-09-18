@@ -2,6 +2,7 @@ package com.example.HostelManagementSystem_Backend.service.impl;
 
 import com.example.HostelManagementSystem_Backend.dto.impl.HostelCreateDto;
 import com.example.HostelManagementSystem_Backend.dto.impl.HostelSummaryDto;
+import com.example.HostelManagementSystem_Backend.dto.impl.HostelResponseDto;
 import com.example.HostelManagementSystem_Backend.entity.impl.HostelEntity;
 import com.example.HostelManagementSystem_Backend.entity.impl.OwnerEntity;
 import com.example.HostelManagementSystem_Backend.repository.HostelRepository;
@@ -27,7 +28,7 @@ public class HostelServiceImpl implements HostelService {
     private final Mapping mapping;
 
     @Transactional
-    public HostelEntity createHostel(HostelCreateDto dto, String username) {
+    public HostelResponseDto createHostel(HostelCreateDto dto, String username) {
         OwnerEntity owner = ownerRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Owner not found with username: " + username));
 
@@ -35,7 +36,8 @@ public class HostelServiceImpl implements HostelService {
         hostel.setHostelId(idGenerator.generateHostelId());
         hostel.setOwner(owner);
 
-        return hostelRepository.save(hostel);
+        HostelEntity entity= hostelRepository.save(hostel);
+        return  mapping.toHostelResponseDto(entity);
     }
 
     public List<HostelSummaryDto> getAllHostels() {
