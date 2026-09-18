@@ -150,7 +150,7 @@ public class Mapping {
     }
 
 
-    public HostelSummaryDto toHostelSummaryDto(HostelEntity entity) {
+    public HostelSummaryDto toHostelSummaryDto(HostelEntity entity, Class<HostelSummaryDto> hostelSummaryDtoClass) {
         return modelMapper.map(entity, HostelSummaryDto.class);
     }
 
