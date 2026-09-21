@@ -26,11 +26,11 @@ public class HostelController {
 
     @PostMapping
     @PreAuthorize("hasRole('OWNER')")
-    public ResponseEntity<HostelResponseDto> createHostel(
+    public ResponseEntity<HostelSummaryDto> createHostel(
             @Valid @RequestBody HostelCreateDto hostelCreateDto,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        HostelResponseDto savedHostel = hostelService.createHostel(hostelCreateDto, userDetails.getUsername());
+        HostelSummaryDto savedHostel = hostelService.createHostel(hostelCreateDto, userDetails.getUsername());
         return new ResponseEntity<>(savedHostel, HttpStatus.CREATED);
     }
 
@@ -38,5 +38,10 @@ public class HostelController {
     public ResponseEntity<List<HostelSummaryDto>> getAllHostels() {
         List<HostelSummaryDto> hostels = hostelService.getAllHostels();
         return ResponseEntity.ok(hostels);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<HostelResponseDto> getHostelById(@PathVariable String id) {
+        HostelResponseDto hostel = hostelService.getHostelById(id);
+        return ResponseEntity.ok(hostel);
     }
 }

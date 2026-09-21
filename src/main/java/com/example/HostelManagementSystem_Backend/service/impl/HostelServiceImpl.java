@@ -28,7 +28,7 @@ public class HostelServiceImpl implements HostelService {
     private final Mapping mapping;
 
     @Transactional
-    public HostelResponseDto createHostel(HostelCreateDto dto, String username) {
+    public HostelSummaryDto createHostel(HostelCreateDto dto, String username) {
         OwnerEntity owner = ownerRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Owner not found with username: " + username));
 
@@ -37,17 +37,22 @@ public class HostelServiceImpl implements HostelService {
         hostel.setOwner(owner);
 
         HostelEntity entity= hostelRepository.save(hostel);
-        return  mapping.toHostelResponseDto(entity);
+        return  mapping.toHostelSummaryDto(entity, HostelSummaryDto.class);
     }
 
     public List<HostelSummaryDto> getAllHostels() {
-
-        // 3. Call on the LOWERCASE instance variable, NEVER on 'HostelRepository' class
         List<HostelEntity> hostelEntities = hostelRepository.findAll();
 
         return hostelEntities.stream()
                 .map(entity -> mapping.toHostelSummaryDto(entity, HostelSummaryDto.class))
                 .collect(Collectors.toList());
+    }
+
+    public HostelResponseDto getHostelById(String id) {
+        HostelEntity hostelEntity = hostelRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Hostel not found with id: " + id));
+
+        return mapping.toHostelResponseDto(hostelEntity);
     }
     
 }
