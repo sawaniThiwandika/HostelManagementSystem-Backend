@@ -11,6 +11,8 @@ public interface HostelService {
     public HostelSummaryDto createHostel(HostelCreateDto dto, String username);
     public List<HostelSummaryDto> getAllHostels();
     public HostelResponseDto getHostelById(String id) ;
+    public HostelResponseDto updateHostel(String id, HostelCreateDto dto);
+    public void deleteHostel(String id);
 }
 
 
