@@ -44,4 +44,24 @@ public class HostelController {
         HostelResponseDto hostel = hostelService.getHostelById(id);
         return ResponseEntity.ok(hostel);
     }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<HostelResponseDto> updateHostel(
+            @PathVariable String id,
+            @Valid @RequestBody HostelCreateDto hostelCreateDto) {
+
+        HostelResponseDto updatedHostel = hostelService.updateHostel(id, hostelCreateDto);
+        return ResponseEntity.ok(updatedHostel);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<Void> deleteHostel(@PathVariable String id) {
+        hostelService.deleteHostel(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 }

@@ -54,5 +54,28 @@ public class HostelServiceImpl implements HostelService {
 
         return mapping.toHostelResponseDto(hostelEntity);
     }
+
+    public HostelResponseDto updateHostel(String id, HostelCreateDto dto) {
+        HostelEntity existingHostel = hostelRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Hostel not found with id: " + id));
+
+        HostelEntity updatedData = mapping.toHostelEntity(dto);
+
+        existingHostel.setName(updatedData.getName());
+        existingHostel.setAddress(updatedData.getAddress());
+        existingHostel.setTel(updatedData.getTel());
+        existingHostel.setEmail(updatedData.getEmail());
+        existingHostel.setLocation(updatedData.getLocation());
+
+        HostelEntity savedHostel = hostelRepository.save(existingHostel);
+        return mapping.toHostelResponseDto(savedHostel);
+    }
+
+    public void deleteHostel(String id) {
+        if (!hostelRepository.existsById(id)) {
+            throw new RuntimeException("Hostel not found with id: " + id);
+        }
+        hostelRepository.deleteById(id);
+    }
     
 }
