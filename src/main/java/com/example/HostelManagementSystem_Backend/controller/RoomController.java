@@ -41,6 +41,7 @@ public class RoomController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<RoomResponseDto> updateRoom(
             @PathVariable String id,
             @Valid @RequestBody RoomCreateDto roomCreateDto) {
@@ -49,6 +50,7 @@ public class RoomController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> deleteRoom(@PathVariable String id) {
         roomService.deleteRoom(id);
         return ResponseEntity.noContent().build();
