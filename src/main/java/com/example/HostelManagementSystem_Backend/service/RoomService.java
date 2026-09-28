@@ -10,5 +10,6 @@ public interface RoomService {
     RoomResponseDto saveRoom(RoomCreateDto dto);
     List<RoomSummaryDto> getAllRooms();
     RoomResponseDto getRoomById(String id);
+    RoomResponseDto updateRoom(String id, RoomCreateDto dto);
 
 }
