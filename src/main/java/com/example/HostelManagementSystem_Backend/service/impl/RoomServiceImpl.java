@@ -46,4 +46,17 @@ public class RoomServiceImpl implements RoomService {
         return mapping.toRoomResponseDto(roomEntity);
     }
 
+    @Override
+    public RoomResponseDto updateRoom(String id, RoomCreateDto dto) {
+        if (!roomRepository.existsById(id)) {
+            throw new RuntimeException("Room not found with ID: " + id);
+        }
+
+        RoomEntity roomEntity = mapping.toRoomEntity(dto);
+        roomEntity.setRoomId(id);
+
+        RoomEntity updatedEntity = roomRepository.save(roomEntity);
+        return mapping.toRoomResponseDto(updatedEntity);
+    }
+
 }
