@@ -59,4 +59,13 @@ public class RoomServiceImpl implements RoomService {
         return mapping.toRoomResponseDto(updatedEntity);
     }
 
+    @Override
+    public void deleteRoom(String id) {
+        if (!roomRepository.existsById(id)) {
+            throw new RuntimeException("Room not found with ID: " + id);
+        }
+        roomRepository.deleteById(id);
+    }
+
+
 }
