@@ -40,7 +40,12 @@ public class RoomController {
         return ResponseEntity.ok(room);
     }
 
-
-
+    @PutMapping("/{id}")
+    public ResponseEntity<RoomResponseDto> updateRoom(
+            @PathVariable String id,
+            @Valid @RequestBody RoomCreateDto roomCreateDto) {
+        RoomResponseDto updatedRoom = roomService.updateRoom(id, roomCreateDto);
+        return ResponseEntity.ok(updatedRoom);
+    }
 
 }
