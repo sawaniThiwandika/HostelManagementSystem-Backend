@@ -38,4 +38,12 @@ public class RoomServiceImpl implements RoomService {
                 .map(mapping::toRoomSummaryDto) // Uses your Mapping component method
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public RoomResponseDto getRoomById(String id) {
+        RoomEntity roomEntity = roomRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Room not found with ID: " + id));
+        return mapping.toRoomResponseDto(roomEntity);
+    }
+
 }
