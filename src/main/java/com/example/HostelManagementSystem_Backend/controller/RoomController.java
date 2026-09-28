@@ -28,9 +28,19 @@ public class RoomController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<RoomSummaryDto>> getAllRooms() {
         List<RoomSummaryDto> rooms = roomService.getAllRooms();
         return ResponseEntity.ok(rooms);
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<RoomResponseDto> getRoomById(@PathVariable String id) {
+        RoomResponseDto room = roomService.getRoomById(id);
+        return ResponseEntity.ok(room);
+    }
+
+
+
+
 }
