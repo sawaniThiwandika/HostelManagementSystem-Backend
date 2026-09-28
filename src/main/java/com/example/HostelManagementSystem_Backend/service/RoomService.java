@@ -11,5 +11,5 @@ public interface RoomService {
     List<RoomSummaryDto> getAllRooms();
     RoomResponseDto getRoomById(String id);
     RoomResponseDto updateRoom(String id, RoomCreateDto dto);
-
+    void deleteRoom(String id);
 }
