@@ -12,6 +12,6 @@ public class BedCreateRequestDto {
 
     private String type;
     private String description;
-    private int roomId;
+    private String roomId;
 
 }

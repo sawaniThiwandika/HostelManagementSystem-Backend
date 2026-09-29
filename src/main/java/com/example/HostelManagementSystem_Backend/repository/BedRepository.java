@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BedRepository extends JpaRepository<BedEntity, String> {
@@ -20,4 +21,7 @@ public interface BedRepository extends JpaRepository<BedEntity, String> {
 
     // Find all unallocated beds across the system
     List<BedEntity> findByStudentIsNull();
+
+    @Query("SELECT b.bedId FROM BedEntity b ORDER BY b.bedId DESC LIMIT 1")
+    Optional<String> findLastBedId();
 }

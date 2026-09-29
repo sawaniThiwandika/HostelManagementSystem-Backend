@@ -1,6 +1,7 @@
 package com.example.HostelManagementSystem_Backend.util;
 
 
+import com.example.HostelManagementSystem_Backend.repository.BedRepository;
 import com.example.HostelManagementSystem_Backend.repository.HostelRepository;
 import com.example.HostelManagementSystem_Backend.repository.OwnerRepository;
 import com.example.HostelManagementSystem_Backend.repository.RoomRepository;
@@ -14,6 +15,7 @@ public class IdGenerator {
     private final OwnerRepository ownerRepository;
     private final HostelRepository hostelRepository;
     private final RoomRepository roomRepository;
+    private final BedRepository bedRepository;
 
     public String generateOwnerId() {
         return ownerRepository.findLastOwnerId()
@@ -39,5 +41,13 @@ public class IdGenerator {
                     return String.format("ROOM%06d", numericPart + 1);
                 })
                 .orElse("ROOM000001");
+    }
+    public String generateBedId() {
+        return bedRepository.findLastBedId()
+                .map(lastId -> {
+                    int numericPart = Integer.parseInt(lastId.substring(3)); // "BED" is 3 chars
+                    return String.format("BED%07d", numericPart + 1);
+                })
+                .orElse("BED0000001");
     }
 }
