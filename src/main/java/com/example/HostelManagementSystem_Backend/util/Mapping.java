@@ -44,7 +44,7 @@ public class Mapping {
     public BedEntity toBedEntity(BedCreateRequestDto dto) {
         BedEntity bedEntity = modelMapper.map(dto, BedEntity.class);
 
-        if (dto.getRoomId() != 0) {
+        if (dto.getRoomId() != null) {
             RoomEntity roomEntity = roomRepository.findById(String.valueOf(dto.getRoomId()))
                     .orElseThrow(() -> new RuntimeException("Room not found with ID: " + dto.getRoomId()));
             bedEntity.setRoom(roomEntity);
