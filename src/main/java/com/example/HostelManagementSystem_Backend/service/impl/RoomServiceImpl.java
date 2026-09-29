@@ -38,4 +38,34 @@ public class RoomServiceImpl implements RoomService {
                 .map(mapping::toRoomSummaryDto) // Uses your Mapping component method
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public RoomResponseDto getRoomById(String id) {
+        RoomEntity roomEntity = roomRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Room not found with ID: " + id));
+        return mapping.toRoomResponseDto(roomEntity);
+    }
+
+    @Override
+    public RoomResponseDto updateRoom(String id, RoomCreateDto dto) {
+        if (!roomRepository.existsById(id)) {
+            throw new RuntimeException("Room not found with ID: " + id);
+        }
+
+        RoomEntity roomEntity = mapping.toRoomEntity(dto);
+        roomEntity.setRoomId(id);
+
+        RoomEntity updatedEntity = roomRepository.save(roomEntity);
+        return mapping.toRoomResponseDto(updatedEntity);
+    }
+
+    @Override
+    public void deleteRoom(String id) {
+        if (!roomRepository.existsById(id)) {
+            throw new RuntimeException("Room not found with ID: " + id);
+        }
+        roomRepository.deleteById(id);
+    }
+
+
 }

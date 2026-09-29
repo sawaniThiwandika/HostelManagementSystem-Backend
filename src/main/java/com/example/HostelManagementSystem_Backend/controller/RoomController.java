@@ -28,9 +28,31 @@ public class RoomController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<RoomSummaryDto>> getAllRooms() {
         List<RoomSummaryDto> rooms = roomService.getAllRooms();
         return ResponseEntity.ok(rooms);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<RoomResponseDto> getRoomById(@PathVariable String id) {
+        RoomResponseDto room = roomService.getRoomById(id);
+        return ResponseEntity.ok(room);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<RoomResponseDto> updateRoom(
+            @PathVariable String id,
+            @Valid @RequestBody RoomCreateDto roomCreateDto) {
+        RoomResponseDto updatedRoom = roomService.updateRoom(id, roomCreateDto);
+        return ResponseEntity.ok(updatedRoom);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<Void> deleteRoom(@PathVariable String id) {
+        roomService.deleteRoom(id);
+        return ResponseEntity.noContent().build();
     }
 }
