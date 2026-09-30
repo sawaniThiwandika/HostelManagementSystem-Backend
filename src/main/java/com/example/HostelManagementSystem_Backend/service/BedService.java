@@ -11,6 +11,6 @@ public interface BedService {
     public BedResponseDto saveBed(BedCreateRequestDto dto);
     List<BedResponseDto> getAllBeds();
     BedResponseDto getBedById(String id);
-    BedResponseDto updateBed(String id, RoomCreateDto dto);
+    public BedResponseDto updateBed(String id, BedCreateRequestDto dto);
     void deleteBed(String id);
 }
