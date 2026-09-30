@@ -4,6 +4,7 @@ import com.example.HostelManagementSystem_Backend.dto.impl.BedCreateRequestDto;
 import com.example.HostelManagementSystem_Backend.dto.impl.BedResponseDto;
 import com.example.HostelManagementSystem_Backend.dto.impl.RoomCreateDto;
 import com.example.HostelManagementSystem_Backend.entity.impl.BedEntity;
+import com.example.HostelManagementSystem_Backend.entity.impl.RoomEntity;
 import com.example.HostelManagementSystem_Backend.repository.BedRepository;
 import com.example.HostelManagementSystem_Backend.service.BedService;
 import com.example.HostelManagementSystem_Backend.util.IdGenerator;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 @Service
@@ -35,8 +36,12 @@ public class BedServiceImpl implements BedService {
     }
 
     @Override
-    public List<BedResponseDto> getAllRBed() {
-        return List.of();
+    public List<BedResponseDto> getAllBeds() {
+        List<BedEntity> bedEntities = bedRepository.findAll();
+        return bedEntities.stream()
+                .map(mapping::toBedResponseDto)
+                .collect(Collectors.toList());
+
     }
 
     @Override
