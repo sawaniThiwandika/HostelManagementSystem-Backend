@@ -52,8 +52,16 @@ public class BedServiceImpl implements BedService {
     }
 
     @Override
-    public BedResponseDto updateBed(String id, RoomCreateDto dto) {
-        return null;
+    public BedResponseDto updateBed(String id, BedCreateRequestDto dto) {
+        if (!bedRepository.existsById(id)) {
+            throw new RuntimeException("Bed not found with ID: " + id);
+        }
+
+        BedEntity bedEntity = mapping.toBedEntity(dto);
+        bedEntity.setBedId(id);
+
+        BedEntity updatedEntity = bedRepository.save(bedEntity);
+        return mapping.toBedResponseDto(updatedEntity);
     }
 
     @Override
