@@ -2,6 +2,8 @@ package com.example.HostelManagementSystem_Backend.controller;
 
 import com.example.HostelManagementSystem_Backend.dto.impl.BedCreateRequestDto;
 import com.example.HostelManagementSystem_Backend.dto.impl.BedResponseDto;
+import com.example.HostelManagementSystem_Backend.dto.impl.RoomCreateDto;
+import com.example.HostelManagementSystem_Backend.dto.impl.RoomResponseDto;
 import com.example.HostelManagementSystem_Backend.service.BedService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/beds")
@@ -23,4 +27,36 @@ public class BedController {
         BedResponseDto savedBed = bedService.saveBed(bedCreateRequestDto);
         return new ResponseEntity<>(savedBed, HttpStatus.CREATED);
     }
+    @GetMapping
+    public ResponseEntity<List<BedResponseDto>> getAllBeds() {
+        List<BedResponseDto> beds = bedService.getAllBeds();
+        return ResponseEntity.ok(beds);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER') or hasRole('WARDEN')")
+    public ResponseEntity<BedResponseDto> getBedById(@PathVariable String id) {
+        BedResponseDto bed = bedService.getBedById(id);
+        return ResponseEntity.ok(bed);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<BedResponseDto> updateBed(
+            @PathVariable String id,
+            @Valid @RequestBody BedCreateRequestDto bedCreateDto) {
+        BedResponseDto updatedBed = bedService.updateBed(id, bedCreateDto);
+        return ResponseEntity.ok(updatedBed);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER') or hasRole('WARDEN')")
+    public ResponseEntity<Void> deleteBed(@PathVariable String id) {
+        bedService.deleteBed(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
+
 }
