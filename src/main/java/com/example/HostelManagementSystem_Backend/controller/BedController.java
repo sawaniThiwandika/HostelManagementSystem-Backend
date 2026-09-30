@@ -49,6 +49,12 @@ public class BedController {
         return ResponseEntity.ok(updatedBed);
     }
 
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER') or hasRole('WARDEN')")
+    public ResponseEntity<Void> deleteBed(@PathVariable String id) {
+        bedService.deleteBed(id);
+        return ResponseEntity.noContent().build();
+    }
 
 
 
