@@ -46,7 +46,9 @@ public class BedServiceImpl implements BedService {
 
     @Override
     public BedResponseDto getBedById(String id) {
-        return null;
+        BedEntity bedEntity = bedRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Bed not found with ID: " + id));
+        return mapping.toBedResponseDto(bedEntity);
     }
 
     @Override
