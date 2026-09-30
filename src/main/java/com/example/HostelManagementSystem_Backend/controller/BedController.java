@@ -2,6 +2,7 @@ package com.example.HostelManagementSystem_Backend.controller;
 
 import com.example.HostelManagementSystem_Backend.dto.impl.BedCreateRequestDto;
 import com.example.HostelManagementSystem_Backend.dto.impl.BedResponseDto;
+import com.example.HostelManagementSystem_Backend.dto.impl.RoomResponseDto;
 import com.example.HostelManagementSystem_Backend.dto.impl.RoomSummaryDto;
 import com.example.HostelManagementSystem_Backend.service.BedService;
 import jakarta.validation.Valid;
@@ -30,6 +31,13 @@ public class BedController {
     public ResponseEntity<List<BedResponseDto>> getAllBeds() {
         List<BedResponseDto> beds = bedService.getAllBeds();
         return ResponseEntity.ok(beds);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER') or hasRole('WARDEN')")
+    public ResponseEntity<BedResponseDto> getBedById(@PathVariable String id) {
+        BedResponseDto bed = bedService.getBedById(id);
+        return ResponseEntity.ok(bed);
     }
 
 
