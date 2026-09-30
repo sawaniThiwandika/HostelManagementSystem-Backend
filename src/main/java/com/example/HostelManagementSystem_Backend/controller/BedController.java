@@ -40,5 +40,4 @@ public class BedController {
         return ResponseEntity.ok(bed);
     }
 
-
 }
