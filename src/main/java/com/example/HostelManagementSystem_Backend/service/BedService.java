@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BedService {
     public BedResponseDto saveBed(BedCreateRequestDto dto);
-    List<BedResponseDto> getAllRBed();
+    List<BedResponseDto> getAllBeds();
     BedResponseDto getBedById(String id);
     BedResponseDto updateBed(String id, RoomCreateDto dto);
     void deleteBed(String id);
