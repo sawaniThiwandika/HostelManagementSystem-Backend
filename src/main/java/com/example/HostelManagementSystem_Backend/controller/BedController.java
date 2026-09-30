@@ -2,8 +2,8 @@ package com.example.HostelManagementSystem_Backend.controller;
 
 import com.example.HostelManagementSystem_Backend.dto.impl.BedCreateRequestDto;
 import com.example.HostelManagementSystem_Backend.dto.impl.BedResponseDto;
+import com.example.HostelManagementSystem_Backend.dto.impl.RoomCreateDto;
 import com.example.HostelManagementSystem_Backend.dto.impl.RoomResponseDto;
-import com.example.HostelManagementSystem_Backend.dto.impl.RoomSummaryDto;
 import com.example.HostelManagementSystem_Backend.service.BedService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +39,18 @@ public class BedController {
         BedResponseDto bed = bedService.getBedById(id);
         return ResponseEntity.ok(bed);
     }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<BedResponseDto> updateBed(
+            @PathVariable String id,
+            @Valid @RequestBody BedCreateRequestDto bedCreateDto) {
+        BedResponseDto updatedBed = bedService.updateBed(id, bedCreateDto);
+        return ResponseEntity.ok(updatedBed);
+    }
+
+
+
+
 
 }
