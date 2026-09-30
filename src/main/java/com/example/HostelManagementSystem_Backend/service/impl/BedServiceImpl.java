@@ -66,6 +66,9 @@ public class BedServiceImpl implements BedService {
 
     @Override
     public void deleteBed(String id) {
-
+        if (!bedRepository.existsById(id)) {
+            throw new RuntimeException("Bed not found with ID: " + id);
+        }
+        bedRepository.deleteById(id);
     }
 }
