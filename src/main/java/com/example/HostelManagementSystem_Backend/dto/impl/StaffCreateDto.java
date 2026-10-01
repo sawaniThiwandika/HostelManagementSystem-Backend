@@ -1,10 +1,7 @@
 package com.example.HostelManagementSystem_Backend.dto.impl;
 import com.example.HostelManagementSystem_Backend.dto.SuperDto;
 import com.example.HostelManagementSystem_Backend.enums.StaffCategory;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +22,10 @@ public class StaffCreateDto implements SuperDto {
 
     @NotBlank(message = "Telephone number is required")
     private String tel;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
+    private String email;
 
     @NotBlank(message = "Address is required")
     private String address;
