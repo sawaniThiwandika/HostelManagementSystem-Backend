@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class StaffEntity implements SuperEntity {
     @Id
-    @Column(name = "staff_id", length = 10)
+    @Column(name = "staff_id", length = 15)
     private String staffId;
 
     @Column(length = 255)
@@ -23,6 +23,9 @@ public class StaffEntity implements SuperEntity {
 
     @Column(length = 15)
     private String tel;
+
+    @Column(unique = true, length = 100, nullable = false)
+    private String email;
 
     @Column(length = 255)
     private String address;
