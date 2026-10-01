@@ -1,10 +1,7 @@
 package com.example.HostelManagementSystem_Backend.util;
 
 
-import com.example.HostelManagementSystem_Backend.repository.BedRepository;
-import com.example.HostelManagementSystem_Backend.repository.HostelRepository;
-import com.example.HostelManagementSystem_Backend.repository.OwnerRepository;
-import com.example.HostelManagementSystem_Backend.repository.RoomRepository;
+import com.example.HostelManagementSystem_Backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +13,7 @@ public class IdGenerator {
     private final HostelRepository hostelRepository;
     private final RoomRepository roomRepository;
     private final BedRepository bedRepository;
+    private final StaffRepository staffRepository;
 
     public String generateOwnerId() {
         return ownerRepository.findLastOwnerId()
@@ -49,5 +47,14 @@ public class IdGenerator {
                     return String.format("BED%07d", numericPart + 1);
                 })
                 .orElse("BED0000001");
+    }
+
+    public String generateStaffId() {
+        return staffRepository.findLastStaffId()
+                .map(lastId -> {
+                    int numericPart = Integer.parseInt(lastId.substring(5));
+                    return String.format("STAFF%06d", numericPart + 1);
+                })
+                .orElse("STAFF000001");
     }
 }
