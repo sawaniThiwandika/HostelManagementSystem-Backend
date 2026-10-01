@@ -22,7 +22,7 @@ public class BedController {
     private final BedService bedService;
 
     @PostMapping
-    @PreAuthorize("hasRole('OWNER') or hasRole('WARDEN')")
+    @PreAuthorize("hasRole('OWNER') or hasRole('HOSTEL_WARDEN')")
     public ResponseEntity<BedResponseDto> saveBed(@Valid @RequestBody BedCreateRequestDto bedCreateRequestDto) {
         BedResponseDto savedBed = bedService.saveBed(bedCreateRequestDto);
         return new ResponseEntity<>(savedBed, HttpStatus.CREATED);
@@ -34,7 +34,7 @@ public class BedController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('OWNER') or hasRole('WARDEN')")
+    @PreAuthorize("hasRole('OWNER') or hasRole('HOSTEL_WARDEN')")
     public ResponseEntity<BedResponseDto> getBedById(@PathVariable String id) {
         BedResponseDto bed = bedService.getBedById(id);
         return ResponseEntity.ok(bed);
@@ -50,7 +50,7 @@ public class BedController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('OWNER') or hasRole('WARDEN')")
+    @PreAuthorize("hasRole('OWNER') or hasRole('HOSTEL_WARDEN')")
     public ResponseEntity<Void> deleteBed(@PathVariable String id) {
         bedService.deleteBed(id);
         return ResponseEntity.noContent().build();
