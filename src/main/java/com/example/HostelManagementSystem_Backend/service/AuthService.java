@@ -7,4 +7,5 @@ public interface AuthService {
     AuthResponseDto registerOwner(OwnerCreateDto ownerCreateDto);
     AuthResponseDto login(UserSignUpDto userSignUpDto);
     TokenRefreshResponseDto refreshToken(TokenRefreshRequestDto request);
+    String registerStaff(StaffCreateDto staffCreateDto);
 }
