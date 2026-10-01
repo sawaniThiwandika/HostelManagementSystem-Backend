@@ -3,6 +3,7 @@ package com.example.HostelManagementSystem_Backend.repository;
 import com.example.HostelManagementSystem_Backend.entity.impl.StaffEntity;
 import com.example.HostelManagementSystem_Backend.enums.StaffCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,4 +21,7 @@ public interface StaffRepository extends JpaRepository<StaffEntity, String> {
     List<StaffEntity> findByCategory(StaffCategory category);
 
     List<StaffEntity> findByHostel_HostelIdAndCategory(String hostelId, StaffCategory category);
+
+    @Query("SELECT s.staffId FROM StaffEntity s ORDER BY s.staffId DESC LIMIT 1")
+    Optional<String> findLastStaffId();
 }
