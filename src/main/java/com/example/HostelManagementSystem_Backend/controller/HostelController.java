@@ -61,6 +61,13 @@ public class HostelController {
         hostelService.deleteHostel(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<List<HostelSummaryDto>> getMyHostels(
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        return ResponseEntity.ok(hostelService.getHostelsByOwner(userDetails.getUsername()));
+    }
 
 
 
