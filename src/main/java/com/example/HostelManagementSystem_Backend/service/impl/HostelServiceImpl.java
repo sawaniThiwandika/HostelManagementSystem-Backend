@@ -77,5 +77,15 @@ public class HostelServiceImpl implements HostelService {
         }
         hostelRepository.deleteById(id);
     }
+    @Override
+    @Transactional(readOnly = true)
+    public List<HostelSummaryDto> getHostelsByOwner(String username) {
+        OwnerEntity owner = ownerRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Owner not found with username: " + username));
+
+        return hostelRepository.findByOwner(owner).stream()
+                .map(entity -> mapping.toHostelSummaryDto(entity, HostelSummaryDto.class))
+                .collect(Collectors.toList());
+    }
     
 }

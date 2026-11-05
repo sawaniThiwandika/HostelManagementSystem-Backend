@@ -13,6 +13,7 @@ public interface HostelService {
     public HostelResponseDto getHostelById(String id) ;
     public HostelResponseDto updateHostel(String id, HostelCreateDto dto);
     public void deleteHostel(String id);
+    public List<HostelSummaryDto> getHostelsByOwner(String username);
 }
 
 
